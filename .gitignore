@@ -66,3 +66,5 @@ target/
 
 # PDDL files
 *.pddl
+
+.vscode/
