@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+# shebang line so you can ./gp_generator d n
 """ PDDL generator for the generalized gossip problem.
 Takes the depth of knowledge d and the number of agents n as parameters.
 By default, there are equal to 1 and 6 respectively.

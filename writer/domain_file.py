@@ -7,6 +7,8 @@ from atomsbase.atom import Atom
 """ Generates the visibility predicate for the given depth, of the form
 'S-m ?i1 ... ?id ?s'.
 """
+
+
 def visibility_predicate(d):
     return '(S-' + str(d) + ' ' + ''.join('?i' + str(i) + ' '
                                           for i in range(1, d+1)) + '?s)'
@@ -14,24 +16,37 @@ def visibility_predicate(d):
 
 """ Generates the conditional effect corresponding to the given atom in PDDL.
 """
+
+
+def add_ag(mystring):
+    # 1 is not an argument, so I add 'ag' to each numerical argument
+    finalstr = ''
+    for i in range(len(mystring)):
+        if (mystring[i-1] == ' ') and (mystring[i] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]) and (mystring[i+1] == ' ' or mystring[i+1] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]):
+            finalstr += 'ag'
+        finalstr += mystring[i]
+    return finalstr
+
+
 def str_cond_effect(atom):
     # precondition: either i or j knows this atom
     # i and j must be different from the first agent of the atom
     b_diff = ''
     e_diff = ''
 
+    # (= i j) not (i = j), i is not a predicate = is the predicate.
     if len(atom.vis_list) > 0:
-        b_diff = '(and (not (?i = ' + str(atom.vis_list[0]) + ')) ' + \
-                 '(not (?j = ' + str(atom.vis_list[0]) + ')) '
+        b_diff = '(and (not (= ?i ' + 'ag' + str(atom.vis_list[0]) + ')) ' + \
+                 '(not (= ?j ' + 'ag'+str(atom.vis_list[0]) + ')) '
         e_diff = ')'
 
     pre = b_diff + \
-          '(or ' + \
-          '(and ' + ' '.join(str(eat)
-                             for eat in Atom.eatm(Atom.precede_by(atom, ['?i']))) + ') ' + \
-          '(and ' + ' '.join(str(eat)
-                             for eat in Atom.eatm(Atom.precede_by(atom, ['?j']))) + ')' + \
-          ')' + e_diff + ' '
+        '(or ' + \
+        '(and ' + ' '.join(str(eat)
+                           for eat in Atom.eatm(Atom.precede_by(atom, ['?i']))) + ') ' + \
+        '(and ' + ' '.join(str(eat)
+                           for eat in Atom.eatm(Atom.precede_by(atom, ['?j']))) + ')' + \
+        ')' + e_diff + ' '
 
     # effect: any non-introspective sequence of i and j followed by the atom
     add = '(and ' + \
@@ -45,6 +60,8 @@ def str_cond_effect(atom):
 """ Generates all the conditional effects of a call between two given agents
 in the form of a (PDDL) string.
 """
+
+
 def str_cond_effects_call(base):
     res = ''
 
@@ -59,6 +76,8 @@ def str_cond_effects_call(base):
 
 """ Generates the domain file (requirements, predicates and actions).
 """
+
+
 def print_domain_file(base, file):
     file.write(';; Gossip problem - PDDL domain file\n')
     file.write(';; depth ' + str(depth()) + ', ' +
@@ -79,8 +98,7 @@ def print_domain_file(base, file):
     file.write('\n\t(:action call\n')
     file.write('\t\t:parameters (?i ?j)\n')
     file.write('\t\t:effect (and\n')
-    file.write(str_cond_effects_call(base) + '\t\t)\n')
+    file.write(add_ag(str_cond_effects_call(base)) + '\t\t)\n')
     file.write('\t)\n')
 
     file.write(')\n')
-

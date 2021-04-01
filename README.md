@@ -88,13 +88,13 @@ with the command:
 
 The program can be executed as follows:
 
-`python gp_generator.py d n`
+`./gp_generator.py d n`
 
 with *d >= 1* the **depth of knowledge** and *n >= 2* the **number of agents**.
 
 For example,
 
-`python gp_generator.py 1 6`
+`./gp_generator.py 1 6`
 
 will generate the PDDL files for solving the original gossip problem;
 the best plan will have a length of *8* calls.
@@ -105,7 +105,7 @@ the best plan will have a length of *8* calls.
 Negative goals can be specified in the form of **sets**.
 The general form is:
 
-`python gp_generator.py d n "<set> U ... U <set>"`
+`./gp_generator.py d n "<set> U ... U <set>"`
 
 Quotations marks are not mandatory but will be necessary
 if you have any space in your specification of sets.
@@ -176,28 +176,3 @@ Since they are initially true and no fluent is set to false,
 the problem would become unsolvable.
 Therefore, the program does not negate such atoms even if specified
 (and does not raise an error).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
